@@ -4,10 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Movie {
+public class Movie implements Serializable {
 
     private static final String SECURE_BASE_URL = "https://image.tmdb.org/t/p/";
 
@@ -15,12 +16,14 @@ public class Movie {
     private final String posterPath;
     private final String originalTitle;
     private final String overview;
+    private final double rating; // rating between 0.5 and 10.0
 
     public Movie(JSONObject json) throws JSONException {
         backdropPath = json.getString("backdrop_path");
         posterPath = json.getString("poster_path");
         originalTitle = json.getString("original_title");
         overview = json.getString("overview");
+        rating = json.getDouble("vote_average");
     }
 
     public static List<Movie> fromArray(JSONArray array) throws JSONException {
@@ -31,12 +34,12 @@ public class Movie {
         return movies;
     }
 
-    public String getPosterPath() {
-        return String.format("%sw342/%s", SECURE_BASE_URL, posterPath);
+    public String getPosterPath(String size) {
+        return getUrl(size, posterPath);
     }
 
-    public String getBackdropPath() {
-        return String.format("%sw780/%s", SECURE_BASE_URL, backdropPath);
+    public String getBackdropPath(String size) {
+        return getUrl(size, backdropPath);
     }
 
     public String getOriginalTitle() {
@@ -45,5 +48,13 @@ public class Movie {
 
     public String getOverview() {
         return overview;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    private String getUrl(String size, String path) {
+        return String.format("%s%s/%s", SECURE_BASE_URL, size, path);
     }
 }

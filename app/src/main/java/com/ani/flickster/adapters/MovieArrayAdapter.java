@@ -1,6 +1,7 @@
 package com.ani.flickster.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ani.flickster.MovieDetailActivity;
 import com.ani.flickster.R;
 import com.ani.flickster.models.Movie;
 import com.squareup.picasso.Picasso;
@@ -22,7 +24,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
 
         ViewHolder viewHolder;
         // check the existing view being reused
@@ -47,15 +49,24 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         viewHolder.tvOverview.setText(movie.getOverview());
         Picasso.with(getContext()).load(image(movie)).into(viewHolder.ivMovieImage);
 
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                intent.putExtra(MovieDetailActivity.MOVIE_EXTRA, movie);
+                getContext().startActivity(intent);
+            }
+        });
+
         return convertView;
     }
 
     private String image(Movie movie) {
         int orientation = getContext().getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return movie.getPosterPath();
+            return movie.getPosterPath("w342");
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return movie.getBackdropPath();
+            return movie.getBackdropPath("w780");
         } else {
             throw new IllegalStateException(String.format("Unexpected orientation %s", orientation));
         }
