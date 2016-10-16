@@ -28,9 +28,10 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         tvDetailTitle.setText(movie.getOriginalTitle());
         Picasso.with(this).load(movie.getBackdropPath("w1280")).into(ivDetailMovieImage);
-        rbDetailRating.setNumStars(5);
+        rbDetailRating.setIsIndicator(true);
+        rbDetailRating.setNumStars(10);
         rbDetailRating.setStepSize(0.5f);
-        rbDetailRating.setRating(10.0f / ((float) movie.getRating()));
+        rbDetailRating.setRating((float) movie.getRating());
         tvDetailOverview.setText(movie.getOverview());
     }
 }

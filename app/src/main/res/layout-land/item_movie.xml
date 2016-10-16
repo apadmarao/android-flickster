@@ -5,8 +5,9 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:id="@+id/ivMovieImage"
         tools:src="@mipmap/ic_launcher"
         android:layout_alignParentTop="true"
