@@ -22,19 +22,31 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private static final int POSTER_VIEW_ORDINAL = 0;
     private static final int BACKDROP_VIEW_ORDINAL = 1;
 
-    public MovieArrayAdapter(Context context, List<Movie> movies) {
+    private final int orientation;
+
+    public MovieArrayAdapter(Context context, List<Movie> movies, int orientation) {
         super(context, R.layout.item_movie, movies);
+
+        if (orientation != Configuration.ORIENTATION_PORTRAIT &&
+                orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            throw new IllegalStateException(String.format("Unexpected orientation %s", orientation));
+        }
+        this.orientation = orientation;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        Movie movie = getItem(position);
-        return movie.getRating() <= 5 ? POSTER_VIEW_ORDINAL : BACKDROP_VIEW_ORDINAL;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Movie movie = getItem(position);
+            return movie.getRating() <= 5 ? POSTER_VIEW_ORDINAL : BACKDROP_VIEW_ORDINAL;
+        } else {
+            return POSTER_VIEW_ORDINAL;
+        }
     }
 
     @Override
@@ -103,13 +115,10 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         }
 
         private String image(Movie movie) {
-            int orientation = getContext().getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return movie.getPosterPath("w780");
-            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                return movie.getBackdropPath("w1280");
             } else {
-                throw new IllegalStateException(String.format("Unexpected orientation %s", orientation));
+                return movie.getBackdropPath("w1280");
             }
         }
     }

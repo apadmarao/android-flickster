@@ -50,7 +50,8 @@ public class MovieActivity extends AppCompatActivity {
         });
 
         movies = new ArrayList<>();
-        movieArrayAdapter = new MovieArrayAdapter(this, movies);
+        movieArrayAdapter = new MovieArrayAdapter(this, movies,
+                this.getResources().getConfiguration().orientation);
         lvMovies.setAdapter(movieArrayAdapter);
 
         fetchMovies();
