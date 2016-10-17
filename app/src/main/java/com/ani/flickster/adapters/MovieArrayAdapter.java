@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ani.flickster.MovieDetailActivity;
+import com.ani.flickster.QuickPlayActivity;
 import com.ani.flickster.R;
 import com.ani.flickster.models.Movie;
 import com.squareup.picasso.Picasso;
@@ -50,7 +51,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Movie movie = getItem(position);
 
         ViewHolder viewHolder;
@@ -72,12 +73,21 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         }
 
         viewHolder.populate(movie);
+
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                intent.putExtra(MovieDetailActivity.MOVIE_EXTRA, movie);
-                getContext().startActivity(intent);
+                // If poster item is clicked, show movie detail
+                // If backdrop item is clicked, play movie
+                if (getItemViewType(position) == POSTER_VIEW_ORDINAL) {
+                    Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                    intent.putExtra(MovieDetailActivity.MOVIE_EXTRA, movie);
+                    getContext().startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getContext(), QuickPlayActivity.class);
+                    intent.putExtra(MovieDetailActivity.MOVIE_EXTRA, movie);
+                    getContext().startActivity(intent);
+                }
             }
         });
 
